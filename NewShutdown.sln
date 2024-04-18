@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34601.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shutdown", "Shutdown_8\Shutdown.csproj", "{2959B3CE-CA83-4165-8F99-D2C181F4B79C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner Akcji", "Shutdown_8\Planner Akcji.csproj", "{2959B3CE-CA83-4165-8F99-D2C181F4B79C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

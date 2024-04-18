@@ -28,13 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             groupBox1 = new GroupBox();
-            minutesTextBox = new TextBox();
-            hourTextBox = new TextBox();
             timeTextBox = new TextBox();
-            label2 = new Label();
             label1 = new Label();
-            selectedHourRadioButton = new RadioButton();
+            timerRadioButton = new RadioButton();
             formatRadioButton = new RadioButton();
             groupBox2 = new GroupBox();
             stopButton = new Button();
@@ -49,12 +47,9 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(minutesTextBox);
-            groupBox1.Controls.Add(hourTextBox);
             groupBox1.Controls.Add(timeTextBox);
-            groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(selectedHourRadioButton);
+            groupBox1.Controls.Add(timerRadioButton);
             groupBox1.Controls.Add(formatRadioButton);
             groupBox1.Location = new Point(1, 3);
             groupBox1.Name = "groupBox1";
@@ -63,58 +58,34 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Format Czasu";
             // 
-            // minutesTextBox
-            // 
-            minutesTextBox.Enabled = false;
-            minutesTextBox.Location = new Point(236, 89);
-            minutesTextBox.Name = "minutesTextBox";
-            minutesTextBox.Size = new Size(66, 23);
-            minutesTextBox.TabIndex = 4;
-            // 
-            // hourTextBox
-            // 
-            hourTextBox.Enabled = false;
-            hourTextBox.Location = new Point(159, 89);
-            hourTextBox.Name = "hourTextBox";
-            hourTextBox.Size = new Size(66, 23);
-            hourTextBox.TabIndex = 3;
-            // 
             // timeTextBox
             // 
-            timeTextBox.Location = new Point(11, 89);
+            timeTextBox.Location = new Point(108, 89);
+            timeTextBox.MaxLength = 8;
             timeTextBox.Name = "timeTextBox";
             timeTextBox.Size = new Size(100, 23);
             timeTextBox.TabIndex = 2;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(172, 61);
-            label2.Name = "label2";
-            label2.Size = new Size(112, 15);
-            label2.TabIndex = 16;
-            label2.Text = "Godzina zamknięcia";
+            timeTextBox.TextChanged += timeTextBox_TextChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(11, 61);
+            label1.Location = new Point(111, 61);
             label1.Name = "label1";
             label1.Size = new Size(95, 15);
             label1.TabIndex = 15;
             label1.Text = "Czas w Formacie";
             // 
-            // selectedHourRadioButton
+            // timerRadioButton
             // 
-            selectedHourRadioButton.AutoSize = true;
-            selectedHourRadioButton.Location = new Point(172, 22);
-            selectedHourRadioButton.Name = "selectedHourRadioButton";
-            selectedHourRadioButton.Size = new Size(113, 19);
-            selectedHourRadioButton.TabIndex = 1;
-            selectedHourRadioButton.TabStop = true;
-            selectedHourRadioButton.Text = "Wybierz Godzinę";
-            selectedHourRadioButton.UseVisualStyleBackColor = true;
-            selectedHourRadioButton.CheckedChanged += selectedHourRadioButton_CheckedChanged;
+            timerRadioButton.AutoSize = true;
+            timerRadioButton.Location = new Point(172, 22);
+            timerRadioButton.Name = "timerRadioButton";
+            timerRadioButton.Size = new Size(55, 19);
+            timerRadioButton.TabIndex = 1;
+            timerRadioButton.TabStop = true;
+            timerRadioButton.Text = "Zegar";
+            timerRadioButton.UseVisualStyleBackColor = true;
             // 
             // formatRadioButton
             // 
@@ -122,12 +93,11 @@
             formatRadioButton.Checked = true;
             formatRadioButton.Location = new Point(11, 22);
             formatRadioButton.Name = "formatRadioButton";
-            formatRadioButton.Size = new Size(144, 19);
+            formatRadioButton.Size = new Size(73, 19);
             formatRadioButton.TabIndex = 0;
             formatRadioButton.TabStop = true;
-            formatRadioButton.Text = "hh:mm:ss / mm:ss / ss";
+            formatRadioButton.Text = "Minutnik";
             formatRadioButton.UseVisualStyleBackColor = true;
-            formatRadioButton.CheckedChanged += formatRadioButton_CheckedChanged;
             // 
             // groupBox2
             // 
@@ -152,7 +122,6 @@
             stopButton.TabIndex = 5;
             stopButton.Text = "Sto&p";
             stopButton.UseVisualStyleBackColor = true;
-            stopButton.Click += stopButton_Click;
             // 
             // startButton
             // 
@@ -162,7 +131,6 @@
             startButton.TabIndex = 4;
             startButton.Text = "&Start";
             startButton.UseVisualStyleBackColor = true;
-            startButton.Click += startButton_Click;
             // 
             // statusLabel
             // 
@@ -211,11 +179,16 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             ClientSize = new Size(314, 263);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "Form1";
-            Text = "Shutdown";
+            Text = "Planner Akcji";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             groupBox2.ResumeLayout(false);
@@ -227,12 +200,9 @@
 
         private GroupBox groupBox1;
         private Label label1;
-        private RadioButton selectedHourRadioButton;
+        private RadioButton timerRadioButton;
         private RadioButton formatRadioButton;
-        private Label label2;
-        private TextBox hourTextBox;
         private TextBox timeTextBox;
-        private TextBox minutesTextBox;
         private GroupBox groupBox2;
         private RadioButton netflixRadioButton;
         private RadioButton hibernateRadioButton;

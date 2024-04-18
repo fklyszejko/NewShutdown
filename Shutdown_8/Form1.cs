@@ -1,178 +1,56 @@
-using System.Diagnostics;
+using ShutdownLibrary;
 
 namespace Shutdown_8
 {
     public partial class Form1 : Form
     {
-        private System.Timers.Timer countdownTimer;
-        private int countdownSeconds;
+        private ShutdownManager shutdownManager;
 
         public Form1()
         {
             InitializeComponent();
+            shutdownManager = new ShutdownManager(statusLabel, shutdownRadioButton, hibernateRadioButton, netflixRadioButton, timeTextBox, startButton, stopButton, formatRadioButton, timerRadioButton);
         }
 
-        private void formatRadioButton_CheckedChanged(object sender, EventArgs e)
+        private string InsertColon(string text, int position)
         {
-            minutesTextBox.Enabled = false;
-            hourTextBox.Enabled = false;
-            timeTextBox.Enabled = true;
+            // Wstaw separator ":" w odpowiednim miejscu
+            return text.Insert(position, ":");
         }
 
-        private void selectedHourRadioButton_CheckedChanged(object sender, EventArgs e)
+        private void timeTextBox_TextChanged(object sender, EventArgs e)
         {
+            string text = timeTextBox.Text;
 
-            timeTextBox.Enabled = false;
-            minutesTextBox.Enabled = true;
-            hourTextBox.Enabled = true;
-        }
+            // Zapamiêtaj aktualn¹ pozycjê kursora
+            int cursorPosition = timeTextBox.SelectionStart;
 
-        private void startButton_Click(object sender, EventArgs e)
-        {
-
-            try
-            {
-                InitializeCountdownTimer();
-
-                if (selectedHourRadioButton.Checked)
-                {
-                    int targetHour = int.Parse(hourTextBox.Text);
-                    int targetMinute = int.Parse(minutesTextBox.Text);
-
-                    DateTime now = DateTime.Now;
-                    DateTime targetTime = new DateTime(now.Year, now.Month, now.Day, targetHour, targetMinute, 0);
-
-                    if (targetTime <= now)
-                    {
-                        targetTime = targetTime.AddDays(1);
-                    }
-
-                    countdownSeconds = (int)(targetTime - now).TotalSeconds;
-
-
-                }
-                else if (formatRadioButton.Checked)
-                {
-                    countdownSeconds = ParseTimeInSeconds();
-                }
-
-                countdownTimer.Start();
-            }
-
-            catch (FormatException)
-            {
-                MessageBox.Show("WprowadŸ prawid³owo sformatowany czas.", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void stopButton_Click(object sender, EventArgs e)
-        {
-            countdownTimer.Stop();
-            UpdateStatusLabel("Odliczanie zatrzymane.");
-        }
-        private void CountdownTimer_Tick(object? sender, EventArgs e)
-        {
-            if (countdownSeconds > 0)
-            {
-                UpdateStatusLabel($"Rozpoczêto odliczanie: {countdownSeconds} sekund");
-                countdownSeconds--;
-            }
-            else
-            {
-                if (shutdownRadioButton.Checked)
-                {
-                    ShutdownComputer();
-                    UpdateStatusLabel("Akcja wykonana. \n Komputer zostanie wy³¹czony");
-                }
-                else if (hibernateRadioButton.Checked)
-                {
-                    HibernateComputer();
-                    UpdateStatusLabel("Akcja wykonana. \n Komputer zostanie zahibernowany");
-                }
-                else if (netflixRadioButton.Checked)
-                {
-                    ShutdownNetflix();
-                    UpdateStatusLabel("Akcja wykonana. \n Aplikacja Netflix zostanie zamkniêta.");
-                }
-                else
-                {
-                    UpdateStatusLabel("¯adna akcja nie zosta³a wybrana.");
-                }
-
-                countdownTimer.Stop();
-            }
-        }
-        private void InitializeCountdownTimer()
-        {
-            if (countdownTimer == null)
-            {
-                countdownTimer = new System.Timers.Timer(1000);
-                countdownTimer.Elapsed += CountdownTimer_Tick;
-            }
-        }
-
-        private bool IsValidTimeFormat(string time)
-        {
-            return !string.IsNullOrEmpty(time);
-        }
-
-        private int ParseTimeInSeconds()
-        {
             if (formatRadioButton.Checked)
             {
-                string timeText = timeTextBox.Text;
-
-                // SprawdŸ, czy tekst zawiera tylko jedn¹ cyfrê i dodaj "0" z przodu
-                if (timeText.Length == 1)
-                {
-                    timeText = "00:00:0" + timeText;
-                }
-                else if (timeText.Length == 2)
-                {
-                    timeText = "00:00:" + timeText;
-                }
-
-                if (TimeSpan.TryParse(timeText, out TimeSpan timeSpan))
-                {
-                    return (int)timeSpan.TotalSeconds;
-                }
+                timeTextBox.MaxLength = 8;
             }
-            else
+            else if (timerRadioButton.Checked)
             {
-                int minutes = int.Parse(minutesTextBox.Text);
-                int hours = int.Parse(hourTextBox.Text);
-                return (hours * 60 + minutes) * 60;
+                timeTextBox.MaxLength = 5;
             }
 
-            return 0;
-        }
-
-        private void ShutdownComputer()
-        {
-            // Process.Start("shutdown", "/s /f /t 1");
-        }
-
-        private void HibernateComputer()
-        {
-            // Process.Start("shutdown", "/h");
-        }
-
-        private void ShutdownNetflix()
-        {
-            Process.Start("taskkill", "/IM ApplicationFrameHost.exe");
-        }
-
-        private void UpdateStatusLabel(string message)
-        {
-            if (statusLabel.InvokeRequired)
+            // SprawdŸ, czy tekst zawiera wiêcej ni¿ 1 cyfrê
+            if (text.Length > 1)
             {
-                // Jeœli wywo³anie pochodzi z innego w¹tku, u¿yj Invoke, aby przenieœæ siê na w¹tek UI.
-                statusLabel.Invoke(new Action(() => statusLabel.Text = message));
-            }
-            else
-            {
-                // Jeœli jesteœmy ju¿ na w¹tku UI, mo¿emy bezpoœrednio aktualizowaæ kontrolkê.
-                statusLabel.Text = message;
+                // Dodaj dwukropek po drugiej cyfrze, jeœli d³ugoœæ tekstu wynosi 3 i nie zawiera dwukropka
+                if (text.Length == 3 && !text.Contains(":"))
+                {
+                    timeTextBox.Text = InsertColon(text, 2);
+                    // Przywróæ pozycjê kursora
+                    timeTextBox.SelectionStart = cursorPosition + 1;
+                }
+                // Dodaj dwukropek po czwartej cyfrze, jeœli d³ugoœæ tekstu wynosi 5 i nie zawiera dwukropka
+                else if (text.Length == 6)
+                {
+                    timeTextBox.Text = InsertColon(text, 5);
+                    // Przywróæ pozycjê kursora
+                    timeTextBox.SelectionStart = cursorPosition + 1;
+                }
             }
         }
     }
