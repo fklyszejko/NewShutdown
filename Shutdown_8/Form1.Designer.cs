@@ -116,12 +116,14 @@
             // 
             // stopButton
             // 
+            stopButton.Enabled = false;
             stopButton.Location = new Point(161, 99);
             stopButton.Name = "stopButton";
             stopButton.Size = new Size(75, 23);
             stopButton.TabIndex = 5;
             stopButton.Text = "Sto&p";
             stopButton.UseVisualStyleBackColor = true;
+            stopButton.Click += stopButton_Click;
             // 
             // startButton
             // 
@@ -131,6 +133,7 @@
             startButton.TabIndex = 4;
             startButton.Text = "&Start";
             startButton.UseVisualStyleBackColor = true;
+            startButton.Click += startButton_Click;
             // 
             // statusLabel
             // 

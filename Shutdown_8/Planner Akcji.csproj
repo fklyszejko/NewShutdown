@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ShutdownManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="icons8-power-70.ico" />
   </ItemGroup>
 
